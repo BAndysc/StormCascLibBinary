@@ -1,0 +1,52 @@
+name: Build for Linux
+
+on:
+  push:
+    branches: [ "master" ]
+    tags:
+      - '*'
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: 'recursive'
+
+    - name: Build StormLib
+      run: |
+        cd StormLib
+        mkdir build
+        cd build
+        cmake ../ -DBUILD_SHARED_LIBS=on -DCMAKE_BUILD_TYPE=Release
+        make
+        pwd
+        ls -la
+        rm -rf libstorm.so
+        mv libstorm.so.9.22.0 libstorm.so
+
+    - name: Build CascLib
+      run: |
+        cd CascLib
+        mkdir build
+        cd build
+        cmake ../ -DBUILD_SHARED_LIBS=on -DCMAKE_BUILD_TYPE=Release
+        make
+        pwd
+        ls -la
+        rm -rf libcasc.so
+        mv libcasc.so.1.0.0 libcasc.so
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        name: Linux release
+        tag_name: linux
+        files: |
+          CascLib/build/libcasc.so
+          StormLib/build/libstorm.so
