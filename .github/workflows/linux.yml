@@ -1,0 +1,49 @@
+name: Build for Linux
+
+on:
+  push:
+    branches: [ "master" ]
+    tags:
+      - '*'
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        submodules: 'recursive'
+
+    - name: Build StormLib
+      run: |
+        cd StormLib
+        mkdir build
+        cd build
+        cmake ../ -DBUILD_SHARED_LIBS=on -DCMAKE_BUILD_TYPE=Release
+        make
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: stormlib.so
+        path: StormLib/build/*.so
+
+    - name: Build CascLib
+      run: |
+        cd CascLib
+        mkdir build
+        cd build
+        cmake ../ -DBUILD_SHARED_LIBS=on -DCMAKE_BUILD_TYPE=Release
+        make
+
+    - name: Release
+      uses: softprops/action-gh-release@v1
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        name: Linux release
+        tag_name: linux
+        files: |
+          CascLib/build/*.so
+          StormLib/build/*.so
