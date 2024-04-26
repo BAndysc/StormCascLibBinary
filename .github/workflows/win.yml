@@ -47,7 +47,6 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         name: Windows release
-        tag_name: windows
         files: |
           CascLib\bin\CascLib_dll\x64\Release\CascLib.dll
           StormLib\bin\StormLib_dll\x64\Release\StormLib.dll
