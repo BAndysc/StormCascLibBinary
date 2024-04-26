@@ -23,24 +23,24 @@ jobs:
     - name: Patch stormlib project
       shell: bash
       run: |
-        sed 's/10.0.17134.0/10.0/g' StormLib/StormLib_vs19.vcxproj > StormLib/StormLib_vs19_.vcxproj
-        rm -rf StormLib/StormLib_vs19.vcxproj
-        mv StormLib/StormLib_vs19_.vcxproj StormLib/StormLib_vs19.vcxproj
+        sed 's/10.0.17134.0/10.0/g' StormLib/StormLib.vcxproj > StormLib/StormLib_.vcxproj
+        rm -rf StormLib/StormLib.vcxproj
+        mv StormLib/StormLib_.vcxproj StormLib/StormLib.vcxproj
         
-        sed 's/10.0.17134.0/10.0/g' StormLib/StormLib_vs19_dll.vcxproj > StormLib/StormLib_vs19_dll_.vcxproj
-        rm -rf StormLib/StormLib_vs19_dll.vcxproj
-        mv StormLib/StormLib_vs19_dll_.vcxproj StormLib/StormLib_vs19_dll.vcxproj
+        sed 's/10.0.17134.0/10.0/g' StormLib/StormLib_dll.vcxproj > StormLib/StormLib_dll_.vcxproj
+        rm -rf StormLib/StormLib_dll.vcxproj
+        mv StormLib/StormLib_dll_.vcxproj StormLib/StormLib_dll.vcxproj
         
-        sed 's/10.0.17134.0/10.0/g' StormLib/StormLib_vs19_test.vcxproj > StormLib/StormLib_vs19_test_.vcxproj
-        rm -rf StormLib/StormLib_vs19_test.vcxproj
-        mv StormLib/StormLib_vs19_test_.vcxproj StormLib/StormLib_vs19_test.vcxproj
+        sed 's/10.0.17134.0/10.0/g' StormLib/StormLib_test.vcxproj > StormLib/StormLib_test_.vcxproj
+        rm -rf StormLib/StormLib_test.vcxproj
+        mv StormLib/StormLib_test_.vcxproj StormLib/StormLib_test.vcxproj
 
     - name: Build
       run: |
         cd StormLib
-        msbuild StormLib_vs19.sln /property:Configuration=Release /property:Platform=x64
+        msbuild StormLib.sln /property:Configuration=Release /property:Platform=x64
         cd ../CascLib
-        msbuild CascLib_vs19.sln /property:Configuration=Release /property:Platform=x64
+        msbuild CascLib.sln /property:Configuration=Release /property:Platform=x64
 
     - name: Release
       if: startsWith(github.ref, 'refs/tags/')
